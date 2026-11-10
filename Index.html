@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Fire Pro Connector | Elite Training Hub</title>
+    <!-- 
+      Copyright (c) 2026 Nirajmallik@hub
+      Project: Free Fire Pro Connector (Gift Edition with Pro Timer)
+      License: MIT License
+    -->
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --accent-orange: #f97316;
+            --accent-glow: rgba(249, 115, 22, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Checklist Styles */
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-orange);
+            cursor: pointer;
+        }
+
+        .checklist-item span {
+            font-size: 0.95rem;
+            transition: color 0.2s, text-decoration 0.2s;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + span {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        /* Timer Widget Styles */
+        .timer-display {
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--accent-orange);
+            font-family: monospace;
+            margin: 0.5rem 0;
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .timer-presets {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            border-color: var(--accent-orange);
+            background-color: rgba(249, 115, 22, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-orange);
+            color: #fff;
+            border-color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #ea580c;
+        }
+
+        .btn-danger {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+            color: #f87171;
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .timer-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 2px var(--accent-glow);
+        }
+
+        .output-box {
+            background-color: var(--bg-dark);
+            border-left: 4px solid var(--accent-orange);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background-color: var(--border);
+            border-radius: 9999px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 0.75rem;
+        }
+
+        .progress-bar {
+            background-color: var(--accent-orange);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>🔥 Free Fire Pro Connector</h1>
+            <p>Exclusive Pro Training & Tactical Hub • Gift for Best Friend</p>
+        </header>
+
+        <!-- Training Round Countdown Timer Widget -->
+        <section class="card">
+            <h2>⏱️ Training Round Countdown Timer</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Time your custom room matches and reflex drills with automated sound alerts.</p>
+            
+            <div class="timer-presets">
+                <button class="btn" onclick="setTimer(30)">30s Reflex</button>
+                <button class="btn" onclick="setTimer(300)">5m Rush</button>
+                <button class="btn" onclick="setTimer(900)">15m Custom</button>
+            </div>
+
+            <div id="timerDisplay" class="timer-display">15:00</div>
+
+            <div class="timer-controls">
+                <button id="startPauseBtn" class="btn btn-primary" onclick="toggleTimer()">Start Timer</button>
+                <button class="btn btn-danger" onclick="resetTimer()">Reset</button>
+            </div>
+        </section>
+
+        <!-- Daily Training Checklist -->
+        <section class="card">
+            <h2>🎯 Daily Pro Training Routine</h2>
+            <div id="checklist-container">
+                <label class="checklist-item">
+                    <input type="checkbox" class="task-check" onchange="updateProgress()">
+                    <span><strong>15 Mins Custom Room:</strong> 1v1 Headshot training only (Desert Eagle & Woodpecker)</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox" class="task-check" onchange="updateProgress()">
+                    <span><strong>Gloowall Drill:</strong> Practice 360-degree fast gloowall placement (50 reps)</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox" class="task-check" onchange="updateProgress()">
+                    <span><strong>Ranked Survival:</strong> Play 2 BR matches focusing on high ground & zone rotation</span>
+                </label>
+                <label class="checklist-item">
+                    <input type="checkbox" class="task-check" onchange="updateProgress()">
+                    <span><strong>Character Skill Combo Review:</strong> Test Alok/K + Kelly + Hayato + Moco synergy</span>
+                </label>
+            </div>
+
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+        </section>
+
+        <!-- Pro Sensitivity & DPI Tuner -->
+        <section class="card">
+            <h2>⚡ Pro Sensitivity & DPI Optimizer</h2>
+            <div class="form-group">
+                <label for="deviceType">Select Device Type:</label>
+                <select id="deviceType" onchange="updateSensitivity()">
+                    <option value="android-mid">Android Mid-Range (4GB/6GB RAM)</option>
+                    <option value="android-high">Android High-End (8GB+ RAM / Gaming Phone)</option>
+                    <option value="ios">iPhone / iOS Device</option>
+                </select>
+            </div>
+            
+            <div id="sensitivityOutput" class="output-box">
+                Loading optimal sensitivity settings...
+            </div>
+        </section>
+
+        <!-- Weapon Loadout Strategy -->
+        <section class="card">
+            <h2>🛡️ Meta Weapon Loadout Advisor</h2>
+            <div class="form-group">
+                <label for="playStyle">Select Your Playstyle:</label>
+                <select id="playStyle" onchange="updateLoadout()">
+                    <option value="rusher">Aggressive Rusher (First Man In)</option>
+                    <option value="sniper">Long-Range Sniper (Support)</option>
+                    <option value="igl">In-Game Leader / Squad Anchor</option>
+                </select>
+            </div>
+
+            <div id="loadoutOutput" class="output-box">
+                Select your playstyle to view the recommended weapon combo and character skills.
+            </div>
+        </section>
+
+        <footer>
+            Copyright © 2026 Nirajmallik@hub • MIT License<br>
+            Designed with elite standards for professional mobile gaming.
+        </footer>
+    </div>
+
+    <script>
+        // --- Timer Widget Logic with Web Audio Beep ---
+        let countdownSeconds = 900; // Default 15 mins
+        let remainingSeconds = 900;
+        let timerInterval = null;
+        let isRunning = false;
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function updateDisplay() {
+            document.getElementById('timerDisplay').innerText = formatTime(remainingSeconds);
+        }
+
+        function setTimer(seconds) {
+            pauseTimer();
+            countdownSeconds = seconds;
+            remainingSeconds = seconds;
+            updateDisplay();
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            if (remainingSeconds <= 0) remainingSeconds = countdownSeconds;
+            isRunning = true;
+            document.getElementById('startPauseBtn').innerText = 'Pause';
+            document.getElementById('startPauseBtn').classList.remove('btn-primary');
+            document.getElementById('startPauseBtn').style.backgroundColor = '#eab308'; // Amber pause state
+
+            timerInterval = setInterval(() => {
+                if (remainingSeconds > 0) {
+                    remainingSeconds--;
+                    updateDisplay();
+                } else {
+                    pauseTimer();
+                    playAlertBeep();
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            const btn = document.getElementById('startPauseBtn');
+            btn.innerText = 'Start Timer';
+            btn.classList.add('btn-primary');
+            btn.style.backgroundColor = '';
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            remainingSeconds = countdownSeconds;
+            updateDisplay();
+        }
+
+        // Web Audio API Sound Synthesizer (No external mp3 needed)
+        function playAlertBeep() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
+
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 1.2);
+            } catch (e) {
+                console.log('Audio context not supported or blocked', e);
+            }
+        }
+
+        // --- Checklist Logic ---
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.task-check');
+            const checkedCount = Array.from(checkboxes).filter(chk => chk.checked).length;
+            const percentage = (checkedCount / checkboxes.length) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        // --- Sensitivity Recommendations ---
+        const sensitivities = {
+            "android-mid": "<strong>General:</strong> 95-98 | <strong>Red Dot:</strong> 92-95 | <strong>2X Scope:</strong> 88-90 | <strong>4X Scope:</strong> 85-88 | <strong>AWM Scope:</strong> 50-55 | <strong>Free Look:</strong> 70<br><em>Tip: Use a smooth screen protector and keep fingers clean for fast drag-headshots.</em>",
+            "android-high": "<strong>General:</strong> 88-92 | <strong>Red Dot:</strong> 85-90 | <strong>2X Scope:</strong> 82-85 | <strong>4X Scope:</strong> 80-83 | <strong>AWM Scope:</strong> 45-50 | <strong>Free Look:</strong> 65<br><em>Tip: High touch-sampling rate allows precise drag control without over-aiming.</em>",
+            "ios": "<strong>General:</strong> 90-94 | <strong>Red Dot:</strong> 88-92 | <strong>2X Scope:</strong> 85-88 | <strong>4X Scope:</strong> 82-85 | <strong>AWM Scope:</strong> 48-52 | <strong>Free Look:</strong> 68<br><em>Tip: iOS touch response is naturally fluid; focus on smooth upward half-moon drags.</em>"
+        };
+
+        function updateSensitivity() {
+            const selected = document.getElementById('deviceType').value;
+            document.getElementById('sensitivityOutput').innerHTML = sensitivities[selected];
+        }
+
+        // --- Loadout Recommendations ---
+        const loadouts = {
+            "rusher": "<strong>Primary:</strong> MP40 / M1887 (Close Range Burst)<br><strong>Secondary:</strong> Woodpecker or Scar (Mid-range cover)<br><strong>Character Combo:</strong> Tatsuya / Alok + Kelly (Speed) + J.Bieber (Damage Reduction) + Hayato (Armor Penetration)",
+            "sniper": "<strong>Primary:</strong> AWM / Woodpecker (One-tap potential)<br><strong>Secondary:</strong> MP40 (Emergency self-defense)<br><strong>Character Combo:</strong> Maro (Long range damage) + Rafael (Silent sniper) + Laura (Accurate scope) + Kelly",
+            "igl": "<strong>Primary:</strong> M4A1-III / Groza (Versatile sustain damage)<br><strong>Secondary:</strong> Double Vector or MP5<br><strong>Character Combo:</strong> K / Homer + Moco (Intel tagging) + Shiru (Damage tracker) + Maxim (Fast healing)"
+        };
+
+        function updateLoadout() {
+            const selected = document.getElementById('playStyle').value;
+            document.getElementById('loadoutOutput').innerHTML = loadouts[selected];
+        }
+
+        // Initialize defaults on load
+        window.onload = function() {
+            updateSensitivity();
+            updateLoadout();
+            updateDisplay();
+        };
+    </script>
+</body>
+</html>
